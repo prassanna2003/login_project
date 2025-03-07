@@ -1,18 +1,21 @@
 <?php
 session_start();
-include("db.php"); // Include database connection
+include("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
-    $password = md5($_POST['password']); // Encrypt password (Use password_hash() in real apps)
+    $password = md5($_POST['password']); // Using MD5 hashing (ensure it matches DB)
 
-    // Check if user exists in the database
+    // Debugging: Print SQL query
     $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+    echo "Debug SQL: " . $sql . "<br>";
+
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $_SESSION['username'] = $username; // Store username in session
-        header("Location: dashboard.php"); // Redirect to the dashboard
+        $_SESSION['username'] = $username;
+        header("Location: dashboard.php");
+        exit();
     } else {
         echo "Invalid username or password!";
     }
